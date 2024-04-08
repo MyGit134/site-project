@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Информация о книге:</h1>
+<div class="border rounded-lg border-primary">
+    <h2>Название: "{{book.name}}"</h2>
+    <h4>Жанр: {{book.main_genre}}</h4>
+    <div>
+        <h4>Описание:</h4>
+        {{book.description}}
+    </div>
+    <div>
+        Автор - {{book.user.name}}, Дата загрузки - {{book.created_date}}
+    </div>
+</div>
+<p>
+
+</p>
+<div>
+    <a class="btn btn-success w-25 p-3" href="/download/{{ book.id }}">Скачать</a>
+</div>
+{% endblock %}
