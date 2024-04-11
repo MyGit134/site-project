@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>История действий модератора:</h1>
+<ol>
+    {% for item in data %}
+    {% if item.book == None %}
+    <li>Действие - {{ item.action }}, Пользователь - {{ item.user }}</li>
+    {% else %}
+    <li>Действие - {{ item.action }}, Пользователь - {{ item.user }}, Книга - {{ item.book }}</li>
+    {% endif %}
+    {% endfor %}
+</ol>
+{% endblock %}

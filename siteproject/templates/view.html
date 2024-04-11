@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>"{{book.book_name}}"</h1>
+<div class="border rounded-lg border-primary">
+    <div>
+        {% for i in range(lines) %}
+        {{ file.readline().decode('utf-8') }}
+        <br>
+        {% endfor %}
+    </div>
+</div>
+<div>
+    <br>
+    <a href="/description/{{ book.id }}" class="btn btn-warning w-25 p-3">Назад</a>
+</div>
+{% endblock %}

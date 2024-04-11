@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<meta http-equiv="refresh" content="2.5">
+<h4 style="color:red;">{{ messages[0][1] }}</h4>
+{% endif %}
+{% endwith %}
+<h1>Управление пользователями</h1>
+<h4>Изменение статуса:</h4>
+<form action="/complete" method="POST">
+    <label for="actions">Действие:</label>
+    <select name="actions" id="actions">
+        <option value="modban">Блокировка</option>
+        <option value="unban">Разблокировка</option>
+        <option value="givemod">Выдача мод. прав</option>
+        <option value="takemod">Снятие мод. прав</option>
+        <option value="verify">Верификация</option>
+        <option value="unverify">Отмена верификации</option>
+    </select>
+    <input type="text" name="emailinput" placeholder="Адрес электр. почты пользователя..." size="40">
+    <button type="submit" style="width: 100px;background-color: lightblue;">Выполнить</button>
+</form>
+<br>
+<h4>История действий модератора:</h4>
+<p>
+<form action="/history" method="POST">
+    <input type="text" name="modemail" placeholder="Адрес эл. почты модератора..." size="40">
+    <button type="submit" style="width: 100px;background-color: lightblue;">Найти</button>
+</form>
+<p>
+<br>
+<h1>Управление сайтом</h1>
+<p>
+<h4>Режим тех. работ:</h4>
+<form action="/owner" method="POST" name="close">
+    <input type="hidden" value="close" name="close">
+    <input type="text" name="reason" placeholder="Причина закрытия сайта" size="60">
+    <button type="submit" style="width: 100px;background-color: yellow;">Включить</button>
+    <a href="/owner/cancel" class="btn btn-success">Отменить</a>
+</form>
+    {% endblock %}
