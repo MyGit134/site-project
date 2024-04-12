@@ -98,6 +98,8 @@ def complete():
     elif query == 'unverify':
         user.verified = False
     db_sess.commit()
+    db_sess.expunge_all()
+    db_sess.close()
     return redirect('/owner')
 
 
@@ -113,6 +115,8 @@ def sort():
             results = db_sess.query(Books).filter(Books.main_genre == query)
     except AttributeError:
         results = db_sess.query(Books).filter((Books.main_genre == query) & (Books.under_moderation != True))
+    db_sess.expunge_all()
+    db_sess.close()
     return render_template("index.html", books=results)
 
 
@@ -129,6 +133,8 @@ def find():
             results = db_sess.query(Books).filter(Books.name.contains(query) == True)
     except AttributeError:
         results = db_sess.query(Books).filter((Books.name.contains(query) == True) & (Books.under_moderation != True))
+    db_sess.expunge_all()
+    db_sess.close()
     return render_template('index.html', books=results)
 
 
@@ -147,6 +153,8 @@ def ban(id):
         moderator_action('ban', user=user.email)
         return redirect("/")
     if user and current_user.moderator == True and user.moderator == False:
+        db_sess.expunge_all()
+        db_sess.close()
         return render_template("ban.html", user=user.name, form=form)
     else:
         return abort(404)
@@ -160,6 +168,8 @@ def unban(id):
         user.banned = False
         user.ban_reason = None
         db_sess.commit()
+        db_sess.expunge_all()
+        db_sess.close()
         return redirect("/")
     return abort(404)
 
@@ -203,6 +213,8 @@ def index():
     try:
         check = db_sess.query(User).filter(User.id == current_user.id).first()
         if check.banned == True:
+            db_sess.expunge_all()
+            db_sess.close()
             return render_template("ban_page.html", reason=check.ban_reason)
     except AttributeError:
         pass
@@ -215,6 +227,8 @@ def index():
                 (Books.user == current_user) | (Books.under_moderation != True))
     else:
         books = db_sess.query(Books).filter(Books.under_moderation != True).order_by(Books.id.desc())
+    db_sess.expunge_all()
+    db_sess.close()
     return render_template("index.html", books=books, mod=mod)
 
 
@@ -226,6 +240,8 @@ def view(id):
     try:
         check = db_sess.query(User).filter(User.id == current_user.id).first()
         if check.banned == True:
+            db_sess.expunge_all()
+            db_sess.close()
             return render_template("ban_page.html", reason=check.ban_reason)
     except AttributeError:
         pass
@@ -234,6 +250,8 @@ def view(id):
     file = BytesIO(book.file)
     if lines > 100:
         lines = 100
+    db_sess.expunge_all()
+    db_sess.close()
     return render_template("view.html", file=file, book=book, lines=lines)
 
 
@@ -246,6 +264,8 @@ def edit_book(id):
     try:
         check = db_sess.query(User).filter(User.id == current_user.id).first()
         if check.banned == True:
+            db_sess.expunge_all()
+            db_sess.close()
             return render_template("ban_page.html", reason=check.ban_reason)
     except AttributeError:
         pass
@@ -275,6 +295,7 @@ def edit_book(id):
             books.description = form.description.data
             books.main_genre = form.genre.data
             db_sess.commit()
+            db_sess.expunge_all()
             db_sess.close()
             return redirect('/')
         else:
@@ -309,6 +330,7 @@ def add_book():
         current_user.books.append(books)
         db_sess.merge(current_user)
         db_sess.commit()
+        db_sess.expunge_all()
         db_sess.close()
         return redirect('/')
     return render_template('books.html', title='Добавление книги',
@@ -331,7 +353,6 @@ def public(id):
     if book and current_user.moderator:
         book.under_moderation = False
         db_sess.commit()
-        db_sess.close()
         moderator_action("public", book=book.name, user=book.user.email)
     return redirect("/")
 
@@ -344,12 +365,14 @@ def desc(id):
     try:
         check = db_sess.query(User).filter(User.id == current_user.id).first()
         if check.banned == True:
+            db_sess.expunge_all()
             db_sess.close()
             return render_template("ban_page.html", reason=check.ban_reason)
     except AttributeError:
         pass
     book = db_sess.query(Books).filter(Books.id == id).first()
     if book:
+        db_sess.expunge_all()
         db_sess.close()
         return render_template("desc.html", book=book)
     else:
@@ -364,11 +387,13 @@ def download(id):
     try:
         check = db_sess.query(User).filter(User.id == current_user.id).first()
         if check.banned == True:
+            db_sess.expunge_all()
             db_sess.close()
             return render_template("ban_page.html", reason=check.ban_reason)
     except AttributeError:
         pass
     download = db_sess.query(Upload).filter(Upload.id == id).first()
+    db_sess.expunge_all()
     db_sess.close()
     return send_file(BytesIO(download.file), download_name=f"{download.book_name}.txt", as_attachment=True)
 
@@ -382,6 +407,7 @@ def books_delete(id):
     try:
         check = db_sess.query(User).filter(User.id == current_user.id).first()
         if check.banned == True:
+            db_sess.expunge_all()
             db_sess.close()
             return render_template("ban_page.html", reason=check.ban_reason)
     except AttributeError:
@@ -398,6 +424,7 @@ def books_delete(id):
             moderator_action('remove', book=books.name, user=books.user.email)
     else:
         abort(404)
+    db_sess.expunge_all()
     db_sess.close()
     return redirect('/')
 
@@ -425,6 +452,7 @@ def reqister():
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
+        db_sess.expunge_all()
         db_sess.close()
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)

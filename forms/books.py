@@ -6,6 +6,8 @@ from wtforms.validators import DataRequired
 class BooksForm(FlaskForm):
     name = StringField('Название', validators=[DataRequired()])
     description = TextAreaField("Описание")
-    genre = SelectField(label="Жанр", choices=("Хоррор", "Боевик", "Комедия"))
+    genre = SelectField(label="Жанр", choices=(
+        "Хоррор", "Боевик", "Комедия", "Детектив", "Роман", "Фантастика", "Сказка", "Мелодрама", "Наука",
+        "Приключения"))
     file = FileField("Выбрать книгу")
     submit = SubmitField('Добавить')
