@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Пользователь: {{ user }}</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.reason.label }}<br>
+        {{ form.reason(class="form-control", type="textarea") }}<br>
+        {% for error in form.reason.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    </div>
+</form>
+{% endblock %}
