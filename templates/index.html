@@ -26,6 +26,7 @@
 
     </select>
 <button type="submit" style="width: 100px;background-color: lightblue;">Сортировка</button>
+    <a href="/" style="height=50;width: 100px;background-color: red;" class="btn">Отмена</a>
 </form>
 <br>
 {% for item in books%}
@@ -33,7 +34,7 @@
     <h2>{{item.name}}</h2>
     <h4>{{item.main_genre}}</h4>
     <div>
-        {{item.description[:100]}}...
+        {{item.description[:50]}}...
     </div>
     <div>
         Автор - {{item.user.name}}, Дата загрузки - {{item.created_date}}
@@ -71,5 +72,6 @@
     </div>
 {% endif %}
 </div>
+<br>
 {% endfor %}
 {% endblock %}
