@@ -11,7 +11,7 @@ login_manager.init_app(app)  # Создание всех необходимых 
 
 
 @login_manager.user_loader
-def load_user(user_id):  # Создание сессии
+def load_user(user_id):  # Подключение к базе данных
     db_sess = db_session.create_session()
     return db_sess.query(User).get(user_id)
 
