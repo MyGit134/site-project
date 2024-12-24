@@ -5,7 +5,7 @@
 <div class="border rounded-lg border-primary">
     <div>
         {% for i in range(lines) %}
-        {{ file.readline().decode('utf-8') }}
+        {{ file.readline().decode('utf-8', errors='ignore') }}
         <br>
         {% endfor %}
     </div>
